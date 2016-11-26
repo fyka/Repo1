@@ -1,0 +1,43 @@
+[
+	{
+
+	"nazwa": "Sandały",
+	"rozmiar": 38,
+	"cena": 99
+
+	}, 
+ 	{ 
+
+	"nazwa": "Klapki",
+	"rozmiar": 38,
+	"cena": 49.99
+ 	},
+ 	{
+
+ 	"nazwa": "Szpilki",
+	"rozmiar": 38,
+	"cena": 99.99
+
+	}, 
+ 	{ 
+
+	"nazwa": "Adidasy",
+	"rozmiar": 38,
+	"cena": 129.99
+ 	},
+ 	{
+
+	"nazwa": "Trampki",
+	"rozmiar": 38,
+	"cena": 59.99
+
+	}, 
+ 	{ 
+
+	"nazwa": "Baleriny",
+	"rozmiar": 38,
+	"cena": 39.99
+ 	}
+
+
+]

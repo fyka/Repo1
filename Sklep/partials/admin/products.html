@@ -17,9 +17,9 @@
       <div class="alert alert-info" ng-repeat="product in products | filter : search">
         <span class="text-capitalize">{{product.nazwa}}</span>
         <br>
-        Rozmiar:{{product.rozmiar}}
+        Rozmiar: {{product.rozmiar}}
         <br>
-        {{product.cena | number:2}} zł 
+        {{product.cena | number:2}} zł
         <p>&nbsp;</p>
         <a href="#/admin/product/edit/{{$index}}" class="btn btn-default">Edytuj</a>
         <button ng-click="delete( product , $index )" class="btn btn-danger pull-right">Usuń</button>

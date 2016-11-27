@@ -41,8 +41,8 @@
                 <tbody>
                   <tr ng-repeat="item in order.items">
                     <td>{{item.nazwa}}</td>
-                    <td>{{item.rozmiar}}</td>
                     <td>{{item.cena}}</td>
+                    <td>{{item.rozmiar}}</td>
                     <td>{{item.qty}}</td>
                     <td>{{item.cena * item.qty | number:2}} zł</td>
                   </tr>

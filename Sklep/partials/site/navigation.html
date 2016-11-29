@@ -1,30 +1,106 @@
+
+ <link rel="stylesheet" href="css/style.css" type="text/css" />
+
+ <style>
+      #blok {
+
+        position:relative;
+        width:1000px;
+        height:2.2em;
+        line-height:2.2em;
+        margin:0 auto;
+        font-size:1.5em;
+        background-color:white;
+        overflow:hidden;
+      }
+
+      #blok > p {
+        position:absolute;
+        margin:0;
+        white-space:nowrap;
+        color:black;
+        animation:przesun 30s linear infinite;
+        -webkit-animation:przesun 30s linear infinite; /* dla Google Chrome, Safari, Opera 15+ */
+      }
+
+      #blok > p:hover {
+        animation-play-state:paused;
+        -webkit-animation-play-state:paused;
+      }
+    
+      /* ------------ANIMACJA-PRZESUN------------ */
+      @keyframes przesun
+      {
+        0% { transform:translateX(0); padding-left:110%; }
+        100% { transform:translateX(-100%); padding-left:110%; }
+      }
+
+      @-webkit-keyframes przesun /* dla Google Chrome, Safari, Opera 15+ */
+      {
+        0% { -webkit-transform:translateX(0); padding-left:110%; }
+        100% { -webkit-transform:translateX(-100%); padding-left:110%; }
+      }
+
+
+    </style>
+
+    <style>
+      .center-block {
+        float: none;
+      }
+    </style>
+
+<div id="logo">
+      <div align="right">
+    <img src="logomy.jpg">
+
+
+  </div>
+</div>
+<div id="blok">
+      <p>!!!!!PROMOCJA!!!!!! KOD RABATOWY -20% na wszystkie buty        KOD:FGYh762</p>
+    </div>
+
 <div class="container">
   <div class="row">
     <div class="col-sm-12">
       
-      <nav class="navbar navbar-default">
-        <div class="container-fluid">
-          <!-- Brand and toggle get grouped for better mobile display -->
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#/home">FK</a>
-          </div>
+     <a class="navbar-brand" href="#/home">FK shoes</a> 
+   <nav class="navbar">
+  <div class="container-fluid">
 
-          <!-- Collect the nav links, forms, and other content for toggling -->
-          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-              <li ng-class="{ active : isActive( '/products' ) }"><a href="#/products">Produkty</a></li>
+   <div id="menu">
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li ng-class="active"><a href="#">Strona Główna<span class="sr-only">(current)</span></a></li>
+
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Kategoria <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            
+            
+            <li role="separator" class="divider"></li>
+            <li ng-class="{ active: isActive('/products') }"><a href="#/products">Buty Damskie</a></li>
+            
             </ul>
-            <ul class="nav navbar-nav navbar-right">
-              <li ng-class="{ active : isActive( '/orders' ) }"><a href="#/orders">Zamówienia</a></li>
-              <li ng-class="{ active : isActive( '/login' ) }"><a href="#/login">Logowanie</a></li>
-              <li ng-class="{ active : isActive( '/login' ) }"><a href="#/admin/users">Admin</a></li>
-            </ul>
+               </li>
+                </ul>
+
+
+                
+            <ul class="nav navbar-nav navbar right">
+
+            <li ng-class="{ active: isActive('/cart') }"><a href="#/cart">Koszyk</a></li>
+            <li ng-class="{ active: isActive('/login') }"><a href="#/login">Logowanie</a></li>
+             <li ng-class="{ active: isActive('/orders') }"><a href="#/orders">Zamówienie</a></li>
+             <li ng-class="{ active: isActive('/users') }"><a href="#/admin/users" style="left: 200px;">Administrator</a></li>
+             </ul>
+         
+     
+
+     </div>
           </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
       </nav>

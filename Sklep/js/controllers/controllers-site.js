@@ -48,7 +48,7 @@ controllersSite.controller( 'siteOrders' , [ '$scope' , '$http' , function( $sco
 }]);
 
 
-controllersSite.controller( 'cartCtrl' , [ '$scope' , '$http' , 'cartSrv' , function( $scope , $http , cartSrv ){
+controllersSite.controller( 'cartCtrl' , [ '$scope' , '$http' ,'$filter', 'cartSrv' , function( $scope , $http , $filter , cartSrv ){
 
 	$scope.cart = cartSrv.show();
 
@@ -61,6 +61,8 @@ controllersSite.controller( 'cartCtrl' , [ '$scope' , '$http' , 'cartSrv' , func
 		angular.forEach( $scope.cart , function ( item ) {
 			total += item.qty * item.cena;
 		});
+
+		total= $filter( 'number' )(total,2);
 		return total;
 	};
 
@@ -81,20 +83,28 @@ controllersSite.controller( 'cartCtrl' , [ '$scope' , '$http' , 'cartSrv' , func
 
 		//sprawdzanie czy uzytkownik jest zalogowany
 
-		var loggedIn=false;
+		var loggedIn=true;
 
 		if(!loggedIn)
 		{
 			$scope.alert={ type: 'warning', msg: 'Musisz być zalogowany'};
+			$event.preventDefault();  	   //blokada przesyłanie formularza
+			return false;
 		}
 
+
+		
 
 		console.log($scope.total());
 		console.log($scope.cart);
 
 
-		$event.preventDefault();   //blokada przesyłanie formularza
+		  $scope.alert={ type: 'success', msg: 'Zamówienie zostało przyjęte, następuje przekierowywanie...'};
+		  
+		  cartSrv.empty();
 
+		  $event.preventDefault(); 
+		  $( '#paypalForm').submit(); 
 
 	};
 

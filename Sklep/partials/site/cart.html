@@ -16,12 +16,12 @@
       <table class="table table-hover">
         <thead>
           <tr>
-            <td>Nazwa</td>
-            <td>Rozmiar</td>
-            <td>Ilość</td>
-            <td>Cena</td>
-            <td>Razem</td>
-            <td>Usuń</td>
+            <th>Nazwa</th>
+            <th>Rozmiar</th>
+            <th>Ilość</th>
+            <th>Cena</th>
+            <th>Razem</th>
+            <th>Usuń</th>
           </tr>
         </thead>
         <tbody>
@@ -37,7 +37,7 @@
               <span class="text-danger" ng-show="myForm.input{{$index}}.$error.max">Nie mamy tyle...</span>
               <span class="text-danger" ng-show="myForm.input{{$index}}.$error.min">Serio?!</span>
             </td>
-            <td>{{item.price | number:2}} zł</td>
+            <td>{{item.cena | number:2}} zł</td>
             <td><strong>{{item.qty * item.cena | number:2}} zł</strong></td>
 
 

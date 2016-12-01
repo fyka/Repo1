@@ -114,3 +114,50 @@ controllersSite.controller( 'cartCtrl' , [ '$scope' , '$http' ,'$filter', 'cartS
 	});
 
 }]);
+
+
+
+controllersAdmin.controller( 'orders' , [ '$scope' , '$http' , function( $scope , $http ){
+
+	$http.get( 'model/orders.json' ).
+	success( function( data ){
+		$scope.orders = data;
+	}).error( function(){
+		console.log( 'Błąd pobrania pliku json' );
+	});
+
+}]);
+
+controllersAdmin.controller( 'login' , [ '$scope' , '$http' , function( $scope , $http ){
+
+	// to do pobrac dane z formularza i przesłac do bazy danych uwierzytelnianie itd..
+
+
+		$scope.input={};
+		$scope.formSubmit =function()
+		{	
+			$scope.errors={};
+			$scope.errors.login="Błędne hasło lub email";
+			console.log($scope.input)
+		};
+	
+
+}]);
+controllersAdmin.controller( 'register' , [ '$scope' , '$http' , function( $scope , $http ){
+
+	// to do pobrac dane z formularza i przesłac do bazy danych uwierzytelnianie itd..
+	
+	$scope.input={};
+		$scope.formSubmit =function()
+		{	
+			$scope.errors={};
+			$scope.errors.email="Błędne hasło";
+			$scope.submit=true;
+			console.log($scope.input)
+
+
+		};
+	
+
+
+}]);

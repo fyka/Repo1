@@ -1,0 +1,27 @@
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12">
+
+      <div class="panel panel-default">
+        <div class="panel-body">
+
+          <h2>
+            {{product.nazwa}}
+            <span class="label label-warning pull-right">cena: {{product.cena | number:2}} zł</span>
+          </h2>
+
+          <h3><span class="label label-info">Rozmiar: {{product.rozmiar}} </span></h3>
+          <br>
+
+          <p>{{product.desc}}</p>
+          <br>
+
+          <a href="#/products" class="btn btn-default">Powrót</a>
+          <button ng-click="addToCart( product )" class="btn btn-primary">Dodaj do koszyka</button>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,57 @@
+body
+{
+	background-color:#FFFFFF;
+	font family: 'Lato',sans-serif;
+}
+
+#container
+{
+	width:1000px;
+	margin-left:auto;
+	margin-right:auto;
+	
+}
+
+#pics
+{
+	
+	margin-top:10px;
+	margin-left:105px;	
+}
+
+#logo
+{
+	background-color:black;
+	margin-top:10px;
+	margin-left:auto;
+	margin-right:auto;
+	
+	
+
+}
+
+#menu ul li a {
+    color: #000; /* kolor czarny */ 
+}
+#menu
+{
+	background-color:white;
+	
+	padding:10px;
+	margin-left:auto;
+	margin-right:auto;
+	font-size:18px;
+	color:green;
+
+}
+
+.container-fluid
+{
+	background-color:black;
+	margin-top:10px;	
+	padding:10px;
+	margin-left:auto;
+	margin-right:auto;
+	
+
+}

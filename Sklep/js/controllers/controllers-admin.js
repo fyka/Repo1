@@ -1,6 +1,6 @@
 'use strict';
 
-var controllersAdmin = angular.module( 'controllersAdmin' , ['angularFileUpload' , 'myDirectives'] );
+var controllersAdmin = angular.module( 'controllersAdmin' , [ 'angularFileUpload' , 'myDirectives' ] );
 
 
 controllersAdmin.controller( 'products' , [ '$scope' , '$http' , function( $scope , $http ){
@@ -14,7 +14,7 @@ controllersAdmin.controller( 'products' , [ '$scope' , '$http' , function( $scop
 
 	$scope.delete = function ( product , $index ) {
 
-		if(!confirm('Czy na pewno chcesz usunąć?'))
+		if ( !confirm( 'Czy na pewno chcesz usunąć ten produkt?' ) )
 			return false;
 
 		$scope.products.splice( $index , 1 );
@@ -26,39 +26,53 @@ controllersAdmin.controller( 'products' , [ '$scope' , '$http' , function( $scop
 }]);
 
 
-controllersAdmin.controller( 'productEdit' , [ '$scope' , '$http' , '$routeParams' ,'FileUploader' , function( $scope , $http , $routeParams, FileUploader ){
+controllersAdmin.controller( 'productEdit' , [ '$scope' , '$http' , '$routeParams' , 'FileUploader' , function( $scope , $http , $routeParams , FileUploader ){
+
+	var id = $routeParams.id;
+	$scope.id = id;
 
 	$http.post( 'model/products.json' ).
 	success( function( data ){
 		var products = data;
-		$scope.product = products[$routeParams.id];
+		$scope.product = products[id];
 	}).error( function(){
 		console.log( 'Błąd pobrania pliku json' );
 	});
+
+	function getImages() {
+		$http.get( 'api/admin/images/get/' + id ).
+		success( function( data ){
+			$scope.images = data; 
+		}).error( function(){
+			console.log( 'Błąd pobrania pliku json' );
+		});
+	}
+	getImages();
 
 	$scope.saveChanges = function ( product ) {
 
 		// TODO: przesłać dane przez API
 
 		console.log( product );
-		console.log( $routeParams.id );
+		console.log( id );
 	};
 
-		 var uploader = $scope.uploader = new FileUploader({
-            url: '' 
-		});
+    var uploader = $scope.uploader = new FileUploader({
+        url: 'api/admin/images/upload/' + id
+    });
 
-	    uploader.filters.push({
+    uploader.filters.push({
         name: 'imageFilter',
         fn: function(item /*{File|FileLikeObject}*/, options) {
             var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
             return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
         }
-		});
+    });
 
-		 uploader.onCompleteItem = function(fileItem, response, status, headers) {
-            console.info('onCompleteItem', fileItem, response, status, headers);
-		};
+    uploader.onCompleteItem = function(fileItem, response, status, headers) {
+        getImages();
+    };
+
 
 }]);
 
@@ -86,10 +100,8 @@ controllersAdmin.controller( 'users' , [ '$scope' , '$http' , function( $scope ,
 
 	$scope.delete = function ( user , $index ) {
 
-
-	if(!confirm('Czy na pewno chcesz usunąć?'))
+		if ( !confirm( 'Czy na pewno chcesz usunąć tego użytkownika?' ) )
 			return false;
-		
 
 		$scope.users.splice( $index , 1 );
 
@@ -144,9 +156,9 @@ controllersAdmin.controller( 'orders' , [ '$scope' , '$http' , function( $scope 
 
 	$scope.delete = function ( user , $index ) {
 
-			if(!confirm('Czy na pewno chcesz usunąć?'))
+		if ( !confirm( 'Czy na pewno chcesz usunąć to zdjęcie' ) )
 			return false;
-		
+
 		$scope.orders.splice( $index , 1 );
 
 		// TODO: przesłać dane przez API
@@ -154,6 +166,8 @@ controllersAdmin.controller( 'orders' , [ '$scope' , '$http' , function( $scope 
 	};
 
 	$scope.changeStatus = function ( order ) {
+
+		console.log( 'test' );
 
 		if ( order.status == 0 )
 			order.status = 1;

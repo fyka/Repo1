@@ -1,9 +1,6 @@
-
-
-//dyrektywy umożliwiają tworzenie elementów o konkretnej nazwie którzy sobie sami definiujemy jako takich elementów wewnątrz html
 'use strict';
 
-var myServices = angular.module( 'myDirectives' , [] );
+var myDirectives = angular.module( 'myDirectives' , [] );
 
 
     // Angular File Upload module does not include this directive
@@ -15,8 +12,7 @@ var myServices = angular.module( 'myDirectives' , [] );
     * @author: nerv
     * @version: 0.1.2, 2014-01-09
     */
-
-        myDirectives.directive('ngThumb', ['$window', function($window) {
+    myDirectives.directive('ngThumb', ['$window', function($window) {
         var helper = {
             support: !!($window.FileReader && $window.CanvasRenderingContext2D),
             isFile: function(item) {
@@ -59,4 +55,4 @@ var myServices = angular.module( 'myDirectives' , [] );
                 }
             }
         };
-}]);
+    }]);

@@ -27,7 +27,7 @@ myServices.factory( 'cartSrv' , [ 'store' , function( store ) {
 
 			// TODO: zmienić name na id gdy będzie kontakt z bazą
 
-			if ( value.nazwa == product.nazwa )
+			if ( value.name == product.name )
 			{
 				addNew = false;
 				cart[key].qty++;
@@ -49,13 +49,10 @@ myServices.factory( 'cartSrv' , [ 'store' , function( store ) {
 		cart.length = 0;
 	};
 
-
-
-cart.update = function (newCart) {
-
+	cart.update = function ( newCart ) {
 		store.set( 'cart' , newCart );
-			
 	};
+
 	return cart;
 	
 }]);

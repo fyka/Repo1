@@ -7,18 +7,22 @@
 
       <div class="form-group">
         <label>Nazwa produktu</label>
-        <input type="text" class="form-control" ng-model="product.nazwa">
+        <input type="text" class="form-control" ng-model="product.name">
       </div>
 
       <div class="form-group">
         <label>Rozmiar:</label>
-        <input type="text" class="form-control" ng-model="product.rozmiar">
+        <input type="text" class="form-control" ng-model="product.size">
       </div>
 
-     
+      <div class="form-group">
+        <label>Opis</label>
+        <textarea rows="5" class="form-control" ng-model="product.desc"></textarea>
+      </div>
+
       <div class="form-group">
         <label>Cena</label>
-        <input type="text" class="form-control" ng-model="product.cena">
+        <input type="text" class="form-control" ng-model="product.price">
       </div> 
 
 
@@ -109,11 +113,16 @@
 
     <div class="col-sm-6">
 
-      <h2>{{product.nazwa}}</h2>
-      <p>Rozmiar: {{product.rozmiar}}</p>
+      <h2>{{product.name}}</h2>
+      <p>Rozmiar: {{product.size}}</p>
+      <p>{{product.desc}}</p>
       <h3><span class="label label-warning">
-        {{product.cena | number:2}} zł
+        {{product.price | number:2}} zł
       </span></h3>
+
+      <div ng-repeat="image in images">
+          <img ng-src="uploads/{{id}}/{{image}}" alt="" style="width:150px; margin:5px;" class="img-thumbnail pull-left">
+      </div>
 
     </div>
 

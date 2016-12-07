@@ -3,23 +3,34 @@
     <div class="col-sm-12">
 
       <div class="panel panel-default">
-        <div class="panel-body">
+
+        <div class="panel-body" style="background-color:#cccc99; font-face: Verdana; font-size: 14; color:#333300; font-weight: bold">
 
           <h2>
             {{product.name}}
-            <span class="label label-warning pull-right">cena: {{product.price | number:2}} zł</span>
+            <span class="label pull-right" style="background-color:#666633; font-face: Verdana; font-size: 14; color:#cccc99; font-weight: bold">cena: {{product.price | number:2}} zł</span>
           </h2>
 
-          <h3><span class="label label-info">Rozmiar: {{product.size}} </span></h3>
+          <h3><span class="label" style="background-color:#666633; font-face: Verdana; font-size: 14; color:#cccc99; font-weight: bold">Waga: {{product.weight}} kg </span></h3>
           <br>
 
-          <p>{{product.desc}}</p>
+          <p>{{product.description}}</p>
           <br>
 
-          <a href="#/products" class="btn btn-default">Powrót</a>
-          <button ng-click="addToCart( product )" class="btn btn-primary">Dodaj do koszyka</button>
+          <div ng-repeat="image in images">
+              <a href="uploads/{{product.id}}/{{image}}">
+                <img ng-src="uploads/{{product.id}}/{{image}}" alt="" style="width:150px; margin:5px;" class="pull-left img-thumbnail">
+              </a>
+          </div>
+          <div class="clearfix"></div>
+          <br>
+
+          <a href="#/products" class="btn"style="background-color:#666633; font-face: Verdana; font-size: 14; color:#cccc99; font-weight: bold">Powrót</a>
+          <button ng-click="addToCart( product ); checkCart( product )" class="btn " ng-if="!product.qty" style="background-color:#666633; font-face: Verdana; font-size: 14; color:#cccc99; font-weight: bold">Dodaj do koszyka</button>
+          <button ng-click="addToCart( product ); checkCart( product )" class="btn" ng-if="product.qty"style="background-color:#666633; font-face: Verdana; font-size: 14; color:#cccc99; font-weight: bold">W koszyku: {{product.qty}}</button>
 
         </div>
+        
       </div>
 
     </div>

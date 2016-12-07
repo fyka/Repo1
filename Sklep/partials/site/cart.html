@@ -10,11 +10,11 @@
 
       <div ng-if="cart.length">
 
-      <table class="table table-hover">
+      <table class="table table-hover" >
         <thead>
           <tr>
             <th>Nazwa</th>
-            <th>Rozmiar</th>
+            <th>Waga</th>
             <th>Ilość</th>
             <th>Cena</th>
             <th>Razem</th>
@@ -22,9 +22,9 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="item in cart">
+          <tr ng-repeat="item in cart" style="background-color:#cccc99; font-face: Verdana; font-size: 14; color:#333300; font-weight: bold">
             <td>{{item.name}}</td>
-            <td>{{item.size}}</td>
+            <td>{{item.weight}}</td>
             <td>
               <div class="form-group" ng-class="{ 'has-error' : myForm.input{{$index}}.$error.required || myForm.input{{$index}}.$error.number || myForm.input{{$index}}.$error.max || myForm.input{{$index}}.$error.min }">
                 <input class="form-control" name="input{{$index}}" style="width:80px;" type="number" ng-model="item.qty" min="1" max="20" required>
@@ -60,9 +60,12 @@
       </div>
 
       <button ng-click="emptyCart()" class="btn btn-danger">Wyczyść koszyk</button>
+
       <button class="btn btn-primary pull-right" type="submit" ng-disabled="!myForm.$valid">Zamów i zapłać</button>
-      
+ 
       </div>
+<br>
+<br>
 
     </div>
   </div>

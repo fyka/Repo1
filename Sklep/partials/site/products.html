@@ -1,7 +1,8 @@
+
 <div class="container">
   <div class="row">
 
-    <div class="col-xs-6">
+    <div class="col-xs-6 ">
       <input type="text" class="form-control" placeholder="szukaj..." ng-model="search">
       <br>
     </div>
@@ -10,14 +11,18 @@
   <div class="row">
     <div class="col-sm-12">
 
-      <div class="panel panel-default" ng-repeat="product in products | filter : search">
-        <div class="panel-body">
-          <h2><span class="label label-warning pull-right">{{product.price | number:2}} zł </span></h2>
-            <h2><a href="#/product/{{$index}}">{{product.name}}</a></h2>
+      <div class="panel" ng-repeat="product in products | filter : search">
+
+        <div class="panel-body" style="background-color:#cccc99; font-face: Verdana; font-size: 14; color:#333300; font-weight: bold" ng-init="checkCart( product )">
+          <h2><span class="label pull-right" style="background-color:#666633; font-face: Verdana; font-size: 14; color:#cccc99; font-weight: bold">{{product.price | number:2}} zł </span></h2>
+            <h2><a href="#/product/{{product.id}}" style="background-color:#cccc99; font-face: Verdana; font-size: 14; color:#333300; font-weight: bold">{{product.name}}</a></h2>
+          <img src="uploads/{{product.id}}/{{product.thumb}}" alt="" class="img-thumbnail" style="max-width:300px;">
           <p>&nbsp;</p>
-          <a href="#/product/{{$index}}" class="btn btn-info">Szczegóły</a>
-          <button ng-click="addToCart( product )" class="btn btn-primary">Dodaj do koszyka</button>
+          <a href="#/product/{{product.id}}" class="btn"  style="background-color:#666633; font-face: Verdana; font-size: 14; color:#cccc99; font-weight: bold">Szczegóły</a>
+          <button ng-click="addToCart( product ); checkCart( product )" class="btn" style="background-color:#666633; font-face: Verdana; font-size: 14; color:#cccc99; font-weight: bold" ng-if="!product.qty">Dodaj do koszyka</button>
+          <button ng-click="addToCart( product ); checkCart( product )" class="btn" style="background-color:#ffffcc; font-face: Verdana; font-size: 14; color:#999966; font-weight: bold" ng-if="product.qty">W koszyku: {{product.qty}}</button>
         </div>
+
       </div>
 
     </div>

@@ -3,13 +3,14 @@
 var controllersAdmin = angular.module( 'controllersAdmin' , [ 'angularFileUpload' , 'myDirectives' ] );
 
 
-controllersAdmin.controller( 'products' , [ '$scope' , '$http' , function( $scope , $http ){
+controllersAdmin.controller( 'products' , [ '$scope' , '$http' , 'checkToken' , function( $scope , $http , checkToken ){
 	
-	$http.get( 'model/products.json' ).
-	success( function( data ){
+	$http.post( 'api/admin/products/get' , {
+		token: checkToken.raw()
+	}).success( function( data ){
 		$scope.products = data;
 	}).error( function(){
-		console.log( 'Błąd pobrania pliku json' );
+		console.log( 'Błąd połączenia z API' );
 	});
 
 	$scope.delete = function ( product , $index ) {
@@ -19,46 +20,63 @@ controllersAdmin.controller( 'products' , [ '$scope' , '$http' , function( $scop
 
 		$scope.products.splice( $index , 1 );
 
-		// TODO: przesłać dane przez API
+		$http.post( 'api/admin/products/delete/' , {
+			token: checkToken.raw(),
+			product : product
+		}).error( function(){
+			console.log( 'Błąd połączenia z API' );
+		});
 
 	};
 
 }]);
 
 
-controllersAdmin.controller( 'productEdit' , [ '$scope' , '$http' , '$routeParams' , 'FileUploader' , function( $scope , $http , $routeParams , FileUploader ){
+controllersAdmin.controller( 'productEdit' , [ '$scope' , '$http' , '$routeParams' , 'FileUploader' , '$timeout' , 'checkToken' , function( $scope , $http , $routeParams , FileUploader , $timeout , checkToken ){
 
-	var id = $routeParams.id;
-	$scope.id = id;
+	var productId = $routeParams.id;
+	$scope.id = productId;
 
-	$http.post( 'model/products.json' ).
-	success( function( data ){
-		var products = data;
-		$scope.product = products[id];
+	$http.post( 'api/admin/products/get/' + productId , {
+		token: checkToken.raw()
+	}).success( function( data ){
+		$scope.product = data;
 	}).error( function(){
-		console.log( 'Błąd pobrania pliku json' );
+		console.log( 'Błąd połączenia z API' );
 	});
 
+	$scope.saveChanges = function ( product ) {
+
+		$http.post( 'api/admin/products/update/' , {
+			token: checkToken.raw(),
+			product : product
+		}).success( function(){
+			$scope.success = true;
+
+			$timeout(function(){
+				$scope.success = false;
+			} , 3000 );
+
+		}).error( function(){
+			console.log( 'Błąd połączenia z API' );
+		});
+
+	};
+
+
 	function getImages() {
-		$http.get( 'api/admin/images/get/' + id ).
-		success( function( data ){
+		$http.post( 'api/admin/images/get/' + productId , {
+			token: checkToken.raw()
+		}).success( function( data ){
 			$scope.images = data; 
 		}).error( function(){
-			console.log( 'Błąd pobrania pliku json' );
+			console.log( 'Błąd połączenia z API' );
 		});
 	}
 	getImages();
 
-	$scope.saveChanges = function ( product ) {
-
-		// TODO: przesłać dane przez API
-
-		console.log( product );
-		console.log( id );
-	};
-
     var uploader = $scope.uploader = new FileUploader({
-        url: 'api/admin/images/upload/' + id
+        url : 'api/admin/images/upload/' + productId
     });
 
     uploader.filters.push({
@@ -73,29 +91,72 @@ controllersAdmin.controller( 'productEdit' , [ '$scope' , '$http' , '$routeParam
         getImages();
     };
 
+    $scope.delImage = function ( imageName , $index ) {
+
+    	$scope.images.splice( $index , 1 );
+
+		$http.post( 'api/admin/images/delete/' , {
+
+			token: checkToken.raw(),
+			id : productId,
+			image : imageName
+
+		}).error( function(){
+			console.log( 'Błąd połączenia z API' );
+		});
+
+    };
+
+    $scope.setThumb = function ( product , image ) {
+
+		$http.post( 'api/admin/images/setThumb/' , {
+
+			token: checkToken.raw(),
+			product : product,
+			image : image
+
+		}).error( function(){
+			console.log( 'Błąd połączenia z API' );
+		});
+
+    };
+
 
 }]);
 
 
-controllersAdmin.controller( 'productCreate' , [ '$scope' , '$http' , function( $scope , $http ){
+controllersAdmin.controller( 'productCreate' , [ '$scope' , '$http' , '$timeout' , 'checkToken' , function( $scope , $http , $timeout , checkToken ){
 
-	$scope.createProduct = function () {
+	$scope.createProduct = function ( product ) {
 
-		// TODO: przesłać dane przez API
+		$http.post( 'api/admin/products/create/' , {
+			token: checkToken.raw(),
+			product : product
+		}).success( function(){
+			$scope.success = true;
 
-		console.log( $scope.product );
+			$timeout(function(){
+				$scope.success = false;
+				$scope.product = {};
+			} , 3000 );
+
+		}).error( function(){
+			console.log( 'Błąd połączenia z API' );
+		});
+
 	};
 
 }]);
 
 
-controllersAdmin.controller( 'users' , [ '$scope' , '$http' , function( $scope , $http ){
+controllersAdmin.controller( 'users' , [ '$scope' , '$http' , 'checkToken' , function( $scope , $http , checkToken ){
 
-	$http.get( 'model/users.json' ).
-	success( function( data ){
+	$http.post( 'api/admin/users/get' , {
+		token: checkToken.raw()
+	}).success( function( data ){
 		$scope.users = data;
 	}).error( function(){
-		console.log( 'Błąd pobrania pliku json' );
+		console.log( 'Błąd połączenia z API' );
 	});
 
 	$scope.delete = function ( user , $index ) {
@@ -105,76 +166,162 @@ controllersAdmin.controller( 'users' , [ '$scope' , '$http' , function( $scope ,
 
 		$scope.users.splice( $index , 1 );
 
-		// TODO: przesłać dane przez API
+		$http.post( 'api/admin/users/delete/' , {
+			token: checkToken.raw(),
+			user : user
+		}).error( function(){
+			console.log( 'Błąd połączenia z API' );
+		});
 
 	};
+
 
 }]);
 
 
-controllersAdmin.controller( 'userEdit' , [ '$scope' , '$http' , '$routeParams' , function( $scope , $http , $routeParams ){
+controllersAdmin.controller( 'userEdit' , [ '$scope' , '$http' , '$routeParams' , '$timeout' , 'checkToken' , function( $scope , $http , $routeParams , $timeout , checkToken ){
 
-	$http.post( 'model/users.json' ).
-	success( function( data ){
-		var users = data;
-		$scope.user = users[$routeParams.id];
+	var userId = $routeParams.id;
+	$scope.id = userId;
+
+	$http.post( 'api/admin/users/get/' + userId , {
+		token: checkToken.raw()
+	}).success( function( data ){
+		$scope.user = data;
+		console.log( data );
 	}).error( function(){
-		console.log( 'Błąd pobrania pliku json' );
+		console.log( 'Błąd połączenia z API' );
 	});
 
 	$scope.saveChanges = function ( user ) {
 
-		// TODO: przesłać dane przez API
+		$http.post( 'api/admin/users/update/' , {
+			token: checkToken.raw(),
+			user : user,
+			id : userId,
+			name : user.name,
+			email : user.email,
+			password : user.password,
+			passconf : user.passconf
+		}).success( function( errors ){
 
-		console.log( user );
-		console.log( $routeParams.id );
+			$scope.submit = true;
+			
+			if ( errors )
+			{
+				$scope.errors = errors;
+			}
+			else
+			{
+				$scope.success = true;
+				$timeout(function(){
+					$scope.success = false;
+					$scope.product = {};
+				} , 3000 );
+			}
+
+		}).error( function(){
+			console.log( 'Błąd połączenia z API' );
+		});
+
+	};
+
+
+}]);
+
+
+controllersAdmin.controller( 'userCreate' , [ '$scope' , '$http' , '$timeout' , 'checkToken' , function( $scope , $http , $timeout , checkToken ){
+
+	$scope.user = {};
+	$scope.user.role = 'user';
+
+	$scope.createUser = function ( user ) {
+
+		$http.post( 'api/admin/users/create/' , {
+			token: checkToken.raw(),
+			user : user,
+			name : user.name,
+			email : user.email,
+			password : user.password,
+			passconf : user.passconf
+		}).success( function( errors ){
+
+			$scope.submit = true;
+			
+			if ( errors )
+			{
+				$scope.errors = errors;
+			}
+			else
+			{
+				$scope.success = true;
+				$timeout(function(){
+					$scope.success = false;
+					$scope.product = {};
+				} , 3000 );
+			}
+			
+		}).error( function(){
+			console.log( 'Błąd połączenia z API' );
+		});
+
 	};
 
 }]);
 
 
-controllersAdmin.controller( 'userCreate' , [ '$scope' , '$http' , function( $scope , $http ){
+controllersAdmin.controller( 'orders' , [ '$scope' , '$http' , 'checkToken' , function( $scope , $http , checkToken ){
 
-	$scope.createUser = function () {
+	$http.post( 'api/admin/orders/get/' , {
 
-		// TODO: przesłać dane przez API
+		token: checkToken.raw(),
+		payload: checkToken.payload()
 
-		console.log( $scope.user );
-	};
+	}).success( function( data ){
 
-}]);
-
-
-controllersAdmin.controller( 'orders' , [ '$scope' , '$http' , function( $scope , $http ){
-
-	$http.get( 'model/orders.json' ).
-	success( function( data ){
 		$scope.orders = data;
+
+		console.log( data );
+
+		angular.forEach( $scope.orders , function( order , key ){
+			var parsed = JSON.parse( order.items );
+			$scope.orders[key].items = parsed;
+		});
+
 	}).error( function(){
-		console.log( 'Błąd pobrania pliku json' );
+		console.log( 'Błąd połączenia z API' );
 	});
 
-	$scope.delete = function ( user , $index ) {
+	$scope.delete = function ( order , $index ) {
 
 		if ( !confirm( 'Czy na pewno chcesz usunąć to zdjęcie' ) )
 			return false;
 
 		$scope.orders.splice( $index , 1 );
 
-		// TODO: przesłać dane przez API
+		$http.post( 'api/admin/orders/delete/' , {
+			token: checkToken.raw(),
+			id: order.id
+		}).error( function(){
+			console.log( 'Błąd połączenia z API' );
+		});
 
 	};
 
 	$scope.changeStatus = function ( order ) {
-
-		console.log( 'test' );
 
 		if ( order.status == 0 )
 			order.status = 1;
 		else
 			order.status = 0;
 
-		// TODO: przesłać dane przez API
+		$http.post( 'api/admin/orders/update/' , {
+			token: checkToken.raw(),
+			id: order.id,
+			status : order.status
+		}).error( function(){
+			console.log( 'Błąd połączenia z API' );
+		});
 
 	};
 

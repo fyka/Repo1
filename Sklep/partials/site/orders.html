@@ -17,8 +17,8 @@
     			</tr>
     		</thead>
     		<tbody>
-    			<tr ng-repeat="order in orders | filter : search">
-    				<td>{{$index}}</td>
+    			<tr ng-repeat="order in orders">
+    				<td>{{order.id}}</td>
     				<td>{{order.name}}</td>
     				<td>{{order.email}}</td>
     				<td>
@@ -27,7 +27,7 @@
                   <tr>
                     <th>Produkt</th>
                     <th>Cena</th>
-                    <th>Rozmiar</th>
+                    <th>Waga</th>
                     <th>Ilość</th>
                     <th>Razem</th>
                   </tr>
@@ -36,7 +36,7 @@
                   <tr ng-repeat="item in order.items">
                     <td>{{item.name}}</td>
                     <td>{{item.price}}</td>
-                    <td>{{item.size}}</td>
+                    <td>{{item.weight}}</td>
                     <td>{{item.qty}}</td>
                     <td>{{item.price * item.qty | number:2}} zł</td>
                   </tr>

@@ -5,50 +5,97 @@ var controllersSite = angular.module( 'controllersSite' , [] );
 
 controllersSite.controller( 'siteProducts' , [ '$scope' , '$http' , 'cartSrv' , function( $scope , $http , cartSrv ){
 	
-	$http.get( 'model/products.json' ).
+	$http.get( 'api/site/products/get' ).
 	success( function( data ){
 		$scope.products = data;
 	}).error( function(){
-		console.log( 'Błąd pobrania pliku json' );
+		console.log( 'Błąd połączenia z API' );
 	});
 
 	$scope.addToCart = function ( product ) {
 		cartSrv.add( product );
 	};
+
+	$scope.checkCart = function ( product ) {
+		if ( cartSrv.show().length )
+		{
+			angular.forEach( cartSrv.show() , function( item ){
+				if ( item.id == product.id )
+				{
+					product.qty = item.qty;
+				}
+			});
+		}
+	}
 
 }]);
 
 
 controllersSite.controller( 'siteProduct' , [ '$scope' , '$http' , '$routeParams' , 'cartSrv' , function( $scope , $http , $routeParams , cartSrv ){
 
-	$http.post( 'model/products.json' ).
+	var id = $routeParams.id;
+
+	$http.post( 'api/site/products/get/' + id ).
 	success( function( data ){
-		var products = data;
-		$scope.product = products[$routeParams.id];
+		$scope.product = data;
+		$scope.checkCart( $scope.product );
 	}).error( function(){
-		console.log( 'Błąd pobrania pliku json' );
+		console.log( 'Błąd połączenia z API' );
 	});
 
 	$scope.addToCart = function ( product ) {
 		cartSrv.add( product );
 	};
 
+	$scope.checkCart = function ( product ) {
+		if ( cartSrv.show().length )
+		{
+			angular.forEach( cartSrv.show() , function( item ){
+				if ( item.id == product.id )
+				{
+					product.qty = item.qty;
+				}
+			});
+		}
+	}
+
+	function getImages() {
+		$http.get( 'api/site/products/getImages/' + id ).
+		success( function( data ){
+			$scope.images = data; 
+		}).error( function(){
+			console.log( 'Błąd połączenia z API' );
+		});
+	}
+	getImages();
+
 }]);
 
 
-controllersSite.controller( 'siteOrders' , [ '$scope' , '$http' , function( $scope , $http ){
+controllersSite.controller( 'siteOrders' , [ '$scope' , '$http' , 'checkToken' , function( $scope , $http , checkToken ){
 
-	$http.get( 'model/orders.json' ).
-	success( function( data ){
+	$http.post( 'api/site/orders/get/' , {
+
+		token: checkToken.raw(),
+		payload: checkToken.payload()
+
+	}).success( function( data ){
+
 		$scope.orders = data;
+
+		angular.forEach( $scope.orders , function( order , key ){
+			var parsed = JSON.parse( order.items );
+			$scope.orders[key].items = parsed;
+		});
+
 	}).error( function(){
-		console.log( 'Błąd pobrania pliku json' );
+		console.log( 'Błąd połączenia z API' );
 	});
 
 }]);
 
 
-controllersSite.controller( 'cartCtrl' , [ '$scope' , '$http' , '$filter' , 'cartSrv' , function( $scope , $http , $filter , cartSrv ){
+controllersSite.controller( 'cartCtrl' , [ '$scope' , '$http' , '$filter' , 'cartSrv' , 'checkToken' , function( $scope , $http , $filter , cartSrv , checkToken ){
 
 	$scope.cart = cartSrv.show();
 
@@ -72,26 +119,32 @@ controllersSite.controller( 'cartCtrl' , [ '$scope' , '$http' , '$filter' , 'car
 
 	$scope.setOrder = function ( $event ) {
 
-		// TODO: sprawdź czy użytkownik jest zalogowany
-		
-		var loggedIn = true;
-		if ( !loggedIn )
+		$event.preventDefault();
+	
+		if ( !checkToken.loggedIn() )
 		{
 			$scope.alert = { type : 'warning' , msg : 'Musisz być zalogowany, żeby złożyć zamówienie.' };
-			$event.preventDefault();
 			return false;
 		}
 
-		// TODO: zapisz zamówienie w bazie
 
-		console.log( $scope.total() );
-		console.log( $scope.cart );
+		$http.post( 'api/site/orders/create/' , {
 
-		$scope.alert = { type : 'success' , msg : 'Zamówienie złożone. Nie odświeżaj strony. Trwa przekierowywanie do płatności...' };
-		cartSrv.empty();
+			token: checkToken.raw(),
+			payload: checkToken.payload(),
+			items: $scope.cart,
+			total: $scope.total()
 
-		$event.preventDefault();
-		$( '#paypalForm' ).submit();
+		}).success( function( data ){
+
+			cartSrv.empty();
+			$scope.alert = { type : 'success' , msg : 'Zamówienie złożone. Nie odświeżaj strony. Trwa przekierowywanie do płatności...' };
+			$( '#paypalForm' ).submit();
+
+		}).error( function(){
+			console.log( 'Błąd połączenia z API' );
+		});
+
 	};
 
 	$scope.$watch( function (){
@@ -101,43 +154,70 @@ controllersSite.controller( 'cartCtrl' , [ '$scope' , '$http' , '$filter' , 'car
 }]);
 
 
-controllersAdmin.controller( 'orders' , [ '$scope' , '$http' , function( $scope , $http ){
+controllersSite.controller( 'login' , [ '$scope' , '$http' , 'store' , 'checkToken' , '$location' , function( $scope , $http , store , checkToken , $location ){
 
-	$http.get( 'model/orders.json' ).
-	success( function( data ){
-		$scope.orders = data;
-	}).error( function(){
-		console.log( 'Błąd pobrania pliku json' );
-	});
+	if ( checkToken.loggedIn() )
+		$location.path( '/products' );
 
-}]);
+	$scope.user = {};
 
+	$scope.formSubmit = function ( user ) {
 
-controllersAdmin.controller( 'login' , [ '$scope' , '$http' , function( $scope , $http ){
+		$http.post( 'api/site/user/login/' , {
+			email : user.email,
+			password : user.password
+		}).success( function( data ){
 
-	// TODO: pobrać dane z formularza i przesłać do bazy (uwierzytelnianie)
+			$scope.submit = true;
+			$scope.error = data.error;
+			
+			if ( !data.error )
+			{
+				store.set( 'token' , data.token );
+				location.reload();
+			}
+			
+		}).error( function(){
+			console.log( 'Błąd połączenia z API' );
+		});
 
-	$scope.input = {};
-
-	$scope.formSubmit = function () {
-		$scope.errors = {};
-		$scope.errors.login = 'Błędne hasło lub email';
-		console.log( $scope.input );
 	};
 
 }]);
 
 
-controllersAdmin.controller( 'register' , [ '$scope' , '$http' , function( $scope , $http ){
+controllersSite.controller( 'register' , [ '$scope' , '$http' , function( $scope , $http ){
 
-	// TODO: pobrać dane z formularza i przesłać do bazy (uwierzytelnianie)
+	$scope.user = {};
+
+	$scope.formSubmit = function ( user ) {
+
+		$http.post( 'api/site/user/create/' , {
+			user : user,
+			name : user.name,
+			email : user.email,
+			password : user.password,
+			passconf : user.passconf
+		}).success( function( errors ){
+
+			$scope.submit = true;
+			$scope.user = {};
+			
+			if ( errors )
+			{
+				$scope.errors = errors;
+			}
+			else
+			{
+				$scope.errors = {};
+				$scope.success = true;
+			}
+			
+		}).error( function(){
+			console.log( 'Błąd połączenia z API' );
+		});
 
 
-	$scope.formSubmit = function () {
-		$scope.errors = {};
-		$scope.errors.email = 'Przykładowy błąd';
-		$scope.submit = true;
-		console.log( $scope.input );
 	};
 
 }]);

@@ -1,6 +1,6 @@
 body
 {
-	background-color:#FFFFFF;
+	background-color:black;
 	font family: 'Lato',sans-serif;
 }
 
@@ -19,9 +19,9 @@ body
 	margin-left:105px;	
 }
 
-#logo
+#navbar
 {
-	background-color:black;
+	background-color:red;
 	margin-top:10px;
 	margin-left:auto;
 	margin-right:auto;
@@ -31,7 +31,7 @@ body
 }
 
 #menu ul li a {
-    color: #000; /* kolor czarny */ 
+    color: white; /* kolor czarny */ 
 }
 #menu
 {

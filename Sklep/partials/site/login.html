@@ -1,32 +1,32 @@
-<form ng-submit="formSubmit()">
+<form ng-submit="formSubmit( user )">
 <div class="container">
   <div class="row">
     <div class="col-sm-6 center-block">
 
 
-      <div class="panel panel-default">
+      <div class="panel" style="background-color:#cccc99; font-face: Verdana; font-size: 14; color:#333300; font-weight: bold">
 
-        <div class="panel-heading">
-          <h3 class="panel-title"><strong>Logowanie</strong></h3>
+        <div class="panel-heading"style="background-color:#cccc99; font-face: Verdana; font-size: 14; color:#333300; font-weight: bold">
+          <h3 class="panel-title" style="background-color:#cccc99; font-face: Verdana; font-size: 14; color:#333300; font-weight: bold"><strong>Logowanie</strong></h3>
         </div>
 
         <div class="panel-body">
 
-          <div ng-if="errors.login" class="alert alert-danger">{{errors.login}}</div>
+          <div ng-if="error" class="alert alert-danger">{{error}}</div>
           
-          <div class="form-group" ng-class="{ 'has-error' : errors.login }">
+          <div class="form-group" style="background-color:#cccc99; font-face: Verdana; font-size: 14; color:#333300; font-weight: bold" ng-class="{ 'has-error' : error }">
             <label>Email</label>
-            <input type="text" class="form-control" ng-model="input.email" placeholder="Twój adres e-mail">
+            <input type="text" class="form-control" ng-model="user.email" placeholder="Twój adres e-mail">
           </div>
 
-          <div class="form-group" ng-class="{ 'has-error' : errors.login }">
+          <div class="form-group" style="background-color:#cccc99; font-face: Verdana; font-size: 14; color:#333300; font-weight: bold" ng-class="{ 'has-error' : error }">
             <label>Hasło</label>
-            <input type="password" class="form-control" ng-model="input.password" placeholder="Twój hasło">
+            <input type="password" class="form-control" ng-model="user.password" placeholder="Twój hasło">
           </div>
 
           <br>
 
-          <button class="btn btn-primary btn-block">Zaloguj się</button>
+          <button class="btn btn-block" style="background-color:#333300; font-face: Verdana; font-size: 14; color:#cccc99; font-weight: bold">Zaloguj się</button>
 
         </div>
       </div>

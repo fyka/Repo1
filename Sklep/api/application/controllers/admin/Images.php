@@ -3,6 +3,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Images extends CI_Controller {
 
+	public function __construct()
+	{
+		parent::__construct();
+
+		$this->load->model( 'admin/Products_model' );
+	}
+
 	public function upload( $id )
 	{
 
@@ -51,6 +58,50 @@ class Images extends CI_Controller {
 
 	    echo json_encode( $newFiles );
 
+	}
+
+	public function delete()
+	{
+		$post = file_get_contents( 'php://input' );
+		$_POST = json_decode( $post , true );
+
+		$token = $this->input->post( 'token' );
+		$token = $this->jwt->decode( $token , config_item( 'encryption_key' ) );	
+
+		if ( $token->role != 'admin' )
+			exit( 'Nie jesteś adminem' );
+		
+		
+		$id = $this->input->post( 'id' );
+		$image = $this->input->post( 'image' );
+
+	    $imagePath = FCPATH . '..' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR;
+	    $imagePath = $imagePath . $id . DIRECTORY_SEPARATOR;
+	    $imagePath = $imagePath . $image;
+
+	    unlink( $imagePath );
+	}
+
+	public function setThumb()
+	{
+
+		$post = file_get_contents( 'php://input' );
+		$_POST = json_decode( $post , true );
+
+		$token = $this->input->post( 'token' );
+		$token = $this->jwt->decode( $token , config_item( 'encryption_key' ) );	
+
+		if ( $token->role != 'admin' )
+			exit( 'Nie jesteś adminem' );
+
+
+		$input = $this->input->post( 'product' );
+		$productId = $input['id'];
+
+		$imageName = $this->input->post( 'image' );
+		$product['thumb'] = $imageName;
+
+		$this->Products_model->setThumb( $productId , $product );
 	}
 
 }
